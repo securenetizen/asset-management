@@ -15,7 +15,7 @@ export default function Layout() {
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: Home, roles: ['user', 'manager', 'admin'] },
-    { name: 'My Requisitions', href: '/requisitions', icon: FileText, roles: ['user', 'manager', 'admin'] },
+    { name: 'My Requisitions', href: '/my-requisitions', icon: FileText, roles: ['user', 'manager', 'admin'] },
     { name: 'New Requisition', href: '/requisitions/new', icon: FileText, roles: ['user', 'manager', 'admin'] },
     { name: 'Approvals', href: '/approvals', icon: CheckSquare, roles: ['manager', 'admin'] },
     { name: 'Admin Dashboard', href: '/admin', icon: Users, roles: ['admin'] },

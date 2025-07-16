@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { mockRequisitions } from '../data/mockData';
+import axios from 'axios';
 import { Requisition, User } from '../types';
 import RequisitionCard from '../components/requisition/RequisitionCard';
 import RequisitionModal from '../components/requisition/RequisitionModal';
@@ -14,13 +14,19 @@ export default function AdminDashboard() {
   const [showUserModal, setShowUserModal] = useState(false);
   
   useEffect(() => {
-    // In a real app, fetch data from API
-    // For demo, we're filtering approved requisitions
-    const approvedRequisitions = mockRequisitions.filter(
-      req => req.status === 'approved'
-    );
-    
-    setRequisitions(approvedRequisitions);
+    const fetchRequisitions = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/requisitions');
+        const approvedRequisitions = response.data.filter(
+          req => req.status === 'approved'
+        );
+        setRequisitions(approvedRequisitions);
+      } catch (error) {
+        console.error('Error fetching requisitions:', error);
+      }
+    };
+
+    fetchRequisitions();
   }, []);
   
   const handleRequisitionClick = (requisition: Requisition) => {

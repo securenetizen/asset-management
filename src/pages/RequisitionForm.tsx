@@ -6,7 +6,8 @@ import { z } from 'zod';
 import { PlusCircle, Trash2, Save, ArrowLeft } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { RequisitionFormData } from '../types';
-import { generateId } from '../lib/utils';
+import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
 
 // Define validation schema
 const requisitionItemSchema = z.object({
@@ -25,6 +26,7 @@ const requisitionSchema = z.object({
 
 export default function RequisitionForm() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { register, control, handleSubmit, formState: { errors } } = useForm<RequisitionFormData>({
@@ -45,13 +47,15 @@ export default function RequisitionForm() {
     setIsSubmitting(true);
     
     try {
-      // In a real app, send data to the server
-      console.log('Submitting form:', data);
+      const totalCost = data.items.reduce((acc, item) => acc + item.quantity * item.estimatedCost, 0);
+      const requisitionData = {
+        ...data,
+        totalCost,
+        createdBy: user?._id,
+      };
+
+      await axios.post('http://localhost:5000/requisitions/add', requisitionData);
       
-      // Mock a successful submission (add delay to simulate network request)
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Success - navigate to requisitions list
       navigate('/requisitions', { state: { success: true, message: 'Requisition submitted successfully!' } });
     } catch (error) {
       console.error('Error submitting form:', error);
