@@ -11,6 +11,7 @@ const Login = lazy(() => import('./pages/Login'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const RequisitionForm = lazy(() => import('./pages/RequisitionForm'));
 const RequisitionList = lazy(() => import('./pages/RequisitionList'));
+const MyRequisitions = lazy(() => import('./pages/MyRequisitions'));
 const ApprovalDashboard = lazy(() => import('./pages/ApprovalDashboard'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -27,6 +28,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/requisitions/new" element={<RequisitionForm />} />
             <Route path="/requisitions" element={<RequisitionList />} />
+            <Route path="/my-requisitions" element={<MyRequisitions />} />
             
             {/* Manager routes */}
             <Route 

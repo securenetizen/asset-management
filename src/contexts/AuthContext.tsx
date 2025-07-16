@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '../types';
-import { mockUsers } from '../data/mockData';
+import axios from 'axios';
 
 interface AuthContextType {
   user: User | null;
@@ -29,16 +29,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     
     try {
-      // In a real app, this would be an API call
-      // For demo purposes, we're using mock data
-      const foundUser = mockUsers.find(user => user.email === email);
+      const response = await axios.post('http://localhost:5000/users/login', { email, password });
       
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      if (foundUser && password === 'password') { // Simple password check for demo
-        setUser(foundUser);
-        localStorage.setItem('user', JSON.stringify(foundUser));
+      if (response.data) {
+        setUser(response.data);
+        localStorage.setItem('user', JSON.stringify(response.data));
         return true;
       }
       

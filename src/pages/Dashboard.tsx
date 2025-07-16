@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PlusCircle, AlertCircle, Clock, Check, FileText } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { mockRequisitions } from '../data/mockData';
+import axios from 'axios';
 import RequisitionCard from '../components/requisition/RequisitionCard';
 import RequisitionModal from '../components/requisition/RequisitionModal';
 import Button from '../components/ui/Button';
@@ -14,22 +14,20 @@ export default function Dashboard() {
   const [selectedRequisition, setSelectedRequisition] = useState<Requisition | null>(null);
   
   useEffect(() => {
-    // In a real app, fetch data from API
-    // For demo, filter the mock requisitions based on user role
-    let filtered = [];
-    
-    if (user?.role === 'user') {
-      // Users see their own requisitions
-      filtered = mockRequisitions.filter(req => req.createdBy === user.id);
-    } else if (user?.role === 'manager') {
-      // Managers see all requisitions with emphasis on pending ones
-      filtered = mockRequisitions;
-    } else if (user?.role === 'admin') {
-      // Admins see all requisitions with emphasis on approved ones
-      filtered = mockRequisitions;
-    }
-    
-    setRequisitions(filtered);
+    const fetchRequisitions = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/requisitions');
+        let filteredData = response.data;
+        if (user?.role === 'user') {
+          filteredData = response.data.filter(req => req.createdBy._id === user.id);
+        }
+        setRequisitions(filteredData);
+      } catch (error) {
+        console.error('Error fetching requisitions:', error);
+      }
+    };
+
+    fetchRequisitions();
   }, [user]);
   
   const handleRequisitionClick = (requisition: Requisition) => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { mockRequisitions } from '../data/mockData';
+import axios from 'axios';
 import { Requisition } from '../types';
 import { Clock, Check, X } from 'lucide-react';
 import RequisitionCard from '../components/requisition/RequisitionCard';
@@ -14,13 +14,19 @@ export default function ApprovalDashboard() {
   const [successMessage, setSuccessMessage] = useState('');
   
   useEffect(() => {
-    // In a real app, fetch data from API
-    // For demo, we're filtering pending requisitions
-    const pendingRequisitions = mockRequisitions.filter(
-      req => req.status === 'pending'
-    );
-    
-    setRequisitions(pendingRequisitions);
+    const fetchRequisitions = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/requisitions');
+        const pendingRequisitions = response.data.filter(
+          req => req.status === 'pending'
+        );
+        setRequisitions(pendingRequisitions);
+      } catch (error) {
+        console.error('Error fetching requisitions:', error);
+      }
+    };
+
+    fetchRequisitions();
   }, []);
   
   const handleRequisitionClick = (requisition: Requisition) => {
@@ -31,24 +37,34 @@ export default function ApprovalDashboard() {
     setSelectedRequisition(null);
   };
   
-  const handleApprove = (id: string, notes: string) => {
-    // In a real app, send approval to API
-    setRequisitions(prevReqs => 
-      prevReqs.filter(req => req.id !== id)
-    );
-    
-    setSuccessMessage('Requisition has been approved successfully.');
-    setTimeout(() => setSuccessMessage(''), 5000);
+  const handleApprove = async (id: string, notes: string) => {
+    try {
+      await axios.post(`http://localhost:5000/requisitions/update/${id}`, {
+        status: 'approved',
+        approvedBy: user?._id,
+        processingNotes: notes,
+      });
+      setRequisitions(prevReqs => prevReqs.filter(req => req._id !== id));
+      setSuccessMessage('Requisition has been approved successfully.');
+      setTimeout(() => setSuccessMessage(''), 5000);
+    } catch (error) {
+      console.error('Error approving requisition:', error);
+    }
   };
-  
-  const handleReject = (id: string, reason: string) => {
-    // In a real app, send rejection to API
-    setRequisitions(prevReqs => 
-      prevReqs.filter(req => req.id !== id)
-    );
-    
-    setSuccessMessage('Requisition has been rejected.');
-    setTimeout(() => setSuccessMessage(''), 5000);
+
+  const handleReject = async (id: string, reason: string) => {
+    try {
+      await axios.post(`http://localhost:5000/requisitions/update/${id}`, {
+        status: 'rejected',
+        rejectedBy: user?._id,
+        rejectionReason: reason,
+      });
+      setRequisitions(prevReqs => prevReqs.filter(req => req._id !== id));
+      setSuccessMessage('Requisition has been rejected.');
+      setTimeout(() => setSuccessMessage(''), 5000);
+    } catch (error) {
+      console.error('Error rejecting requisition:', error);
+    }
   };
   
   return (
