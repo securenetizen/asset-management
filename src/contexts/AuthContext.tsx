@@ -29,7 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     
     try {
-      const response = await axios.post('http://server:5000/users/login', { email, password });
+      const response = await axios.post('http://localhost:5000/users/login', { email, password });
       
       if (response.data) {
         setUser(response.data);
