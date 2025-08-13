@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchRequisitions = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/requisitions');
+        const response = await axios.get('http://server:5000/requisitions');
         const approvedRequisitions = response.data.filter(
           req => req.status === 'approved'
         );

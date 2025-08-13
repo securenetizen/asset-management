@@ -54,7 +54,7 @@ export default function RequisitionForm() {
         createdBy: user?._id,
       };
 
-      await axios.post('http://localhost:5000/requisitions/add', requisitionData);
+      await axios.post('http://server:5000/requisitions/add', requisitionData);
       
       navigate('/requisitions', { state: { success: true, message: 'Requisition submitted successfully!' } });
     } catch (error) {

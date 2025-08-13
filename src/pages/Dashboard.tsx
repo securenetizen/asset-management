@@ -16,7 +16,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchRequisitions = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/requisitions');
+        const response = await axios.get('http://server:5000/requisitions');
         let filteredData = response.data;
         if (user?.role === 'user') {
           filteredData = response.data.filter(req => req.createdBy._id === user.id);

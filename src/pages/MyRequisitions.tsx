@@ -18,7 +18,7 @@ export default function MyRequisitions() {
     const fetchRequisitions = async () => {
       if (!user) return;
       try {
-        const response = await axios.get(`http://localhost:5000/requisitions?createdBy=${user._id}`);
+        const response = await axios.get(`http://server:5000/requisitions?createdBy=${user._id}`);
         setRequisitions(response.data);
       } catch (error) {
         console.error('Error fetching requisitions:', error);

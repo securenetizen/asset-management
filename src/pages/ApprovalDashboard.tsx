@@ -16,7 +16,7 @@ export default function ApprovalDashboard() {
   useEffect(() => {
     const fetchRequisitions = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/requisitions');
+        const response = await axios.get('http://server:5000/requisitions');
         const pendingRequisitions = response.data.filter(
           req => req.status === 'pending'
         );
@@ -39,7 +39,7 @@ export default function ApprovalDashboard() {
   
   const handleApprove = async (id: string, notes: string) => {
     try {
-      await axios.post(`http://localhost:5000/requisitions/update/${id}`, {
+      await axios.post(`http://server:5000/requisitions/update/${id}`, {
         status: 'approved',
         approvedBy: user?._id,
         processingNotes: notes,
@@ -54,7 +54,7 @@ export default function ApprovalDashboard() {
 
   const handleReject = async (id: string, reason: string) => {
     try {
-      await axios.post(`http://localhost:5000/requisitions/update/${id}`, {
+      await axios.post(`http://server:5000/requisitions/update/${id}`, {
         status: 'rejected',
         rejectedBy: user?._id,
         rejectionReason: reason,
